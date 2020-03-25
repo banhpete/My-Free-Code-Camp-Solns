@@ -1,0 +1,65 @@
+function checkCashRegister(price, cash, cid) {
+  var cashConversion = {
+    'PENNY': 0.01,
+    'NICKEL' : 0.05,
+    'DIME' : 0.10,
+    'QUARTER' : 0.25,
+    'ONE' : 1.00,
+    'FIVE' : 5.00,
+    'TEN' : 10.00,
+    'TWENTY' : 20.00,
+    'ONE HUNDRED' : 100
+  }
+  var numOfItems = 0;
+  var difference = cash - price;
+  var change = [];
+  var changeChecker = true;
+  var status = "";
+  var returnObj = {};
+
+  for(var i = Object.keys(cid).length-1; i>-1; i--){
+    if(difference >= cashConversion[cid[i][0]]){
+      numOfItems = parseInt(difference/cashConversion[cid[i][0]])
+      while(cashConversion[cid[i][0]]*numOfItems > cid[i][1]){
+        numOfItems -= 1;
+      }
+      if(numOfItems >= 1){
+        difference = parseInt(difference * 1000 - numOfItems*(cashConversion[cid[i][0]          ]*1000))/1000;
+        change.push([cid[i][0],cashConversion[cid[i][0]]*numOfItems])
+        console.log([cid[i][0],cashConversion[cid[i][0]]*numOfItems])
+        console.log(cid[i])
+        if(cid[i][1] != cashConversion[cid[i][0]]*numOfItems){
+          console.log("hi")
+          changeChecker = false; 
+        }
+      }
+    }
+  }
+
+if (difference == 0.00){
+    status = "OPEN"
+    if(changeChecker){
+      status = "CLOSED"
+      change = cid;
+    }
+  }else{
+    status = "INSUFFICIENT_FUNDS"
+    change = [];
+  }
+
+  returnObj['status'] = status;
+  returnObj['change'] = change;
+  return returnObj;
+}
+
+checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]);
+
+// Based on the solution from freecodecamp
+// 1. For future solutions it would be better to change for the "Insufficient funds" status or the "Closed" status in the beginning
+// This way we wouldn't need to run the rest of the code
+// 2. Also, I relied on the for loops a lot - Need to consider solutions that uses reduce instead of for loops. It seems that the performance
+// is far better with reduce with larger samples
+// 3. Floating-Point Arithmetic is always filled with issues - this challenge has shown me the difficulties. This is a result of the
+// binary float-point format that is used - it always ends up with results like 0.30000000000000004. To get around this see this
+// stackflow response: https://stackoverflow.com/questions/10713878/decimal-subtraction-problems-in-javascript/10713947. Multiplication
+// and parseInt is a simple fix for now.

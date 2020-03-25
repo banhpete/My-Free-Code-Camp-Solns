@@ -1,0 +1,11 @@
+function telephoneCheck(str) {
+  var regex = /^\s*(?:\+?(1))?[-. ]*(\(\d{3}\)|\d{3})[-. ]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+  return regex.test(str);
+}
+
+telephoneCheck("555-555-5555");
+
+// 1. Solution was partially taken from https://stackoverflow.com/questions/16699007/regular-expression-to-match-standard-10-digit-phone-number
+// Modifications were done to meet the requirements. This included adding "|" in the regular expression to take into account of the area code
+// that may have "()" around it. 
+// The following website was extremely helpful when reviewing regular expressions
